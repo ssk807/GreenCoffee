@@ -1,0 +1,13 @@
+package echogaurd.greencoffe;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class GreencoffeApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(GreencoffeApplication.class, args);
+    }
+
+}
