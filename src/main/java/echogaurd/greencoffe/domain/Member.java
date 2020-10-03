@@ -1,11 +1,14 @@
 package echogaurd.greencoffe.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
+@Getter @Setter
 public class Member {
     @Id
     @GeneratedValue
@@ -14,27 +17,10 @@ public class Member {
     private String name;
     private Long point;
 
-    public Long getId() {
-        return id;
-    }
+    @Embedded
+    private Address address;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @OneToMany(mappedBy = "member")
+    private List<Order> orderList = new ArrayList<>();
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Long getPoint() {
-        return point;
-    }
-
-    public void setPoint(Long point) {
-        this.point = point;
-    }
 }
