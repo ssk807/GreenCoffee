@@ -4,10 +4,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 public class Item {
 
     @Id
@@ -19,6 +21,9 @@ public class Item {
     private int price;
     private int stockQuantity;
 
-    @OneToMany(mappedBy = "Item")
-    private List<Category> categories;
+    @OneToMany(mappedBy = "item")
+    private List<CategoryItem> categoryItems = new ArrayList<>();
+
+    @OneToMany(mappedBy = "item")
+    private List<OrderLine> orderLines = new ArrayList<>();
 }
