@@ -24,10 +24,10 @@ public class AccountService {
         return account.getId();
     }
 
-    public String login(String _userId, String _passwd) {
+    public Account login(String _userId, String _passwd) {
         String userId = _userId;
         String passwd = _passwd;
-        return accountRepository.loginCheck(userId, passwd);
+       return accountRepository.loginCheck(userId, passwd);
     }
 
     public List<Account> findMembers(){

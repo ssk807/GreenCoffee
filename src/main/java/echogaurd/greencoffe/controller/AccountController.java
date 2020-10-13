@@ -1,11 +1,16 @@
 package echogaurd.greencoffe.controller;
 
+import com.sun.net.httpserver.Authenticator;
 import echogaurd.greencoffe.domain.Account;
 import echogaurd.greencoffe.domain.Address;
 import echogaurd.greencoffe.service.AccountService;
+import echogaurd.greencoffe.service.JwtService;
+import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import org.dom4j.rule.Mode;
 import org.json.simple.JSONObject;
+import org.junit.runner.Result;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -15,11 +20,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.naming.spi.DirStateFactory;
+
 @Controller
 @RequiredArgsConstructor
 public class AccountController {
     private final AccountService accountService;
 
+    @Autowired
+    private JwtService jwtService;
     /*@GetMapping("/members/new")
     public String createForm(Model model) {
         model.addAttribute("memberForm", new AccountForm());
@@ -51,18 +60,27 @@ public class AccountController {
 
     @PostMapping("/login")
     @ResponseBody
-    public JSONObject loginPage(@RequestBody LoginForm loginForm) {
+    public ResponseEntity<JSONObject> loginPage(@RequestBody LoginForm loginForm) {
 
         JSONObject jsonObject = new JSONObject();
         try {
             String userId = loginForm.getUserId();
             String passwd = loginForm.getPasswd();
-            accountService.login(userId, passwd);
-            jsonObject.put("userId", userId);
+            Account account = accountService.login(userId, passwd);
+
+            String token = jwtService.create(account);
+            jsonObject.put("jwt-auth-token", token);
+            jsonObject.put("data", account);
+            // 로그인 성공했다면 token 생성
+
+            // 토큰 정보는 request의 헤더로 보내고 나머지는 Map에 담아주기.
+
+            return new ResponseEntity<>(jsonObject, HttpStatus.ACCEPTED);
+
         }catch(IllegalStateException e){
             e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return jsonObject;
     }
 
 }

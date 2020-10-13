@@ -26,7 +26,7 @@ public class AccountRepository {
         return account.getId();
     }
 
-    public String loginCheck(String userId, String passwd) {
+    public Account loginCheck(String userId, String passwd) {
         String userid = "";
         try {
             TypedQuery<Account> m = em.createQuery("select m from Account m where m.userId = :userId", Account.class);
@@ -34,11 +34,10 @@ public class AccountRepository {
             if (!account.getPasswd().equals(passwd)) {
                 throw new IllegalStateException("ID 혹은 Password가 일치하지 않습니다.");
             }
-            userid = account.getUserId();
+            return account;
         }catch (NoResultException e){
             throw new IllegalStateException("존재하지 않는 회원입니다.");
         }
-        return userid;
     }
     public Account findId(Long id){
         return em.find(Account.class, id);
