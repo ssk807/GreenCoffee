@@ -40,7 +40,7 @@ public class AccountService {
 
 
     private void validateDuplicateMember(Account account) {
-        List<Account> findAccounts = accountRepository.findByName(account.getUserId());
+        List<Account> findAccounts = accountRepository.findByUserID(account.getUserId());
         if (!findAccounts.isEmpty()) {
             throw new IllegalStateException("이미 존재하는 회원입니다.");
         }

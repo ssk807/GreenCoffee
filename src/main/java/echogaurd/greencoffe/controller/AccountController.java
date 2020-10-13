@@ -6,6 +6,8 @@ import echogaurd.greencoffe.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.dom4j.rule.Mode;
 import org.json.simple.JSONObject;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +28,7 @@ public class AccountController {
 
     @PostMapping("/account/create")
     @ResponseBody
-    public String create(@RequestBody AccountForm accountForm, Model model) {
+    public ResponseEntity<JSONObject> create(@RequestBody AccountForm accountForm) {
 
         Address address = new Address(accountForm.getCity(), accountForm.getStreet(), accountForm.getZipcode());
 
@@ -35,11 +37,16 @@ public class AccountController {
         account.setName(accountForm.getName());
         account.setPasswd(accountForm.getPasswd());
         account.setUserId(accountForm.getUserId());
-
-
-        accountService.join(account);
-
-        return account.getName();
+        account.setPoint(Integer.toUnsignedLong(0));
+        try {
+            accountService.join(account);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("token", "This is temp token");
+            return new ResponseEntity<>(jsonObject, HttpStatus.OK);
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PostMapping("/login")

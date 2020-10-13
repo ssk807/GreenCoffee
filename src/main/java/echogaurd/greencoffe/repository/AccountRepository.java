@@ -2,6 +2,7 @@ package echogaurd.greencoffe.repository;
 
 import echogaurd.greencoffe.domain.Account;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
@@ -17,7 +18,11 @@ public class AccountRepository {
     private final EntityManager em;
 
     public Long save(Account account){
-        em.persist(account);
+        try {
+            em.persist(account);
+        }catch(DataIntegrityViolationException e){
+            throw new IllegalStateException("존재하는 ID 입니다.");
+        }
         return account.getId();
     }
 
@@ -35,7 +40,6 @@ public class AccountRepository {
         }
         return userid;
     }
-
     public Account findId(Long id){
         return em.find(Account.class, id);
     }
@@ -50,9 +54,9 @@ public class AccountRepository {
         return m.setParameter("name", name).getResultList();
     }
 
-    public Account findByUserID(String userId){
-        Account account = em.find(Account.class, userId);
-        return account;
+    public List<Account> findByUserID(String userId){
+        TypedQuery<Account> findAccounts = em.createQuery("select a from Account a where a.userId = :userId", Account.class);
+        return findAccounts.setParameter("userId", userId).getResultList();
     }
 
 }
