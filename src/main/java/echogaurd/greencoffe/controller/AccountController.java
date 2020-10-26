@@ -21,6 +21,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.naming.spi.DirStateFactory;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Stack;
 
 @Controller
 @RequiredArgsConstructor
@@ -74,9 +78,8 @@ public class AccountController {
             // 로그인 성공했다면 token 생성
 
             // 토큰 정보는 request의 헤더로 보내고 나머지는 Map에 담아주기.
-
+            
             return new ResponseEntity<>(jsonObject, HttpStatus.ACCEPTED);
-
         }catch(IllegalStateException e){
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
