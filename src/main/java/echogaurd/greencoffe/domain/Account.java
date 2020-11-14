@@ -1,5 +1,7 @@
 package echogaurd.greencoffe.domain;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,6 +18,7 @@ public class Account {
     @Column(name = "ACCOUNT_ID")
     private Long id;
     private String name;
+    private int auth;
 
     @Column(unique = true, nullable = false)
     private String userId;
