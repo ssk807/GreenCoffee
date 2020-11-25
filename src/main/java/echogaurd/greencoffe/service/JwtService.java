@@ -27,7 +27,7 @@ public class JwtService {
         // Payload 설정 - claim 정보 포함
         builder.setSubject("Login Token")
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * expireMin))
-                .claim("Account",account);
+                .claim("ID",account.getId());
 
         // signature - secret key를 이용한 암호화
         builder.signWith(SignatureAlgorithm.HS256, salt.getBytes());

@@ -24,6 +24,7 @@ import javax.naming.spi.DirStateFactory;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Stack;
 
 @Controller
@@ -46,7 +47,7 @@ public class AccountController {
         account.setName(accountForm.getName());
         account.setPasswd(accountForm.getPasswd());
         account.setUserId(accountForm.getUserId());
-        account.setPoint(Integer.toUnsignedLong(0));
+        account.setPoint(0);
         account.setAuth(0);
         try {
             accountService.join(account);
@@ -84,4 +85,24 @@ public class AccountController {
         }
     }
 
+    @PostMapping("/savePoint")
+    @ResponseBody
+    public ResponseEntity<JSONObject> savePoint(@RequestBody TokenForm token){
+        try {
+            Map<String, Object> stringObjectMap = jwtService.get(token.getToken());
+
+            Object object = stringObjectMap.get("ID");
+            Long id = Long.parseLong(object.toString());
+
+            int ret = accountService.savePoint(id);
+
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("point", ret);
+
+            return new ResponseEntity<>(jsonObject,HttpStatus.ACCEPTED);
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

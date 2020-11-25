@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 
 @Service
@@ -28,6 +29,14 @@ public class AccountService {
         String userId = _userId;
         String passwd = _passwd;
        return accountRepository.loginCheck(userId, passwd);
+    }
+
+    @Transactional
+    public int savePoint(Long _Id){
+        Account account = accountRepository.findId(_Id);
+        account.savePoint();
+        System.out.println("account point : " + account.getPoint());
+        return account.getPoint();
     }
 
     public List<Account> findMembers(){

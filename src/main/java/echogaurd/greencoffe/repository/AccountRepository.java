@@ -4,7 +4,9 @@ import echogaurd.greencoffe.domain.Account;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -25,6 +27,7 @@ public class AccountRepository {
         }
         return account.getId();
     }
+
 
     public Account loginCheck(String userId, String passwd) {
         String userid = "";

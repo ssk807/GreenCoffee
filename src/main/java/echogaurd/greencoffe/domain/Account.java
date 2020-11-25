@@ -26,12 +26,16 @@ public class Account {
     @Column(nullable = false)
     private String passwd;
 
-    private Long point;
+    private int point;
 
     @Embedded
     private Address address;
 
     @OneToMany(mappedBy = "account")
     private List<Order> orderList = new ArrayList<>();
+
+    public void savePoint(){
+        this.point += 1;
+    }
 
 }
