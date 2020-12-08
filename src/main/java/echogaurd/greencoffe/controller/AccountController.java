@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.spi.DirStateFactory;
@@ -40,6 +41,8 @@ public class AccountController {
     @ResponseBody
     public ResponseEntity<JSONObject> create(@RequestBody AccountForm accountForm) {
 
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
         Address address = new Address(accountForm.getCity(), accountForm.getStreet(), accountForm.getZipcode());
 
         Account account = new Account();
@@ -53,6 +56,8 @@ public class AccountController {
             accountService.join(account);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("token", "This is temp token");
+            stopWatch.stop();
+            System.out.println("Create Query Time : " + stopWatch.getTotalTimeMillis());
             return new ResponseEntity<>(jsonObject, HttpStatus.OK);
         } catch (IllegalStateException e) {
             e.printStackTrace();

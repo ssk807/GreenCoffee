@@ -1,7 +1,9 @@
 package echogaurd.greencoffe.controller;
 
 import echogaurd.greencoffe.domain.Account;
+import echogaurd.greencoffe.domain.Cafe;
 import echogaurd.greencoffe.service.AccountService;
+import echogaurd.greencoffe.service.CafeService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.IOUtils;
 import org.springframework.http.*;
@@ -19,7 +21,7 @@ import java.io.*;
 public class ManagerController {
 
     private final AccountService accountService;
-
+    private final CafeService cafeService;
 /*    @GetMapping(value = "/getQRImage", produces = MediaType.IMAGE_PNG_VALUE)
     @ResponseBody
     public ResponseEntity<byte[]> getQRimage() throws IOException {
@@ -49,4 +51,24 @@ public class ManagerController {
         return qrcode.getBody();
 
     }
+
+    @PostMapping(value = "/saveCafe")
+    public String saveCafe(@RequestBody CafeForm cafeForm) {
+        Cafe cafe = new Cafe();
+        cafe.setUrl(cafeForm.getUrl());
+        cafe.setName(cafeForm.getName());
+        cafe.setLongitude(cafeForm.getLongitude());
+        cafe.setLatitude(cafeForm.getLatitude());
+        cafe.setContent(cafeForm.getContent());
+        cafe.setFile(cafeForm.getFile());
+
+        try {
+            cafeService.save(cafe);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "Success";
+    }
+
+
 }
